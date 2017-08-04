@@ -347,8 +347,9 @@ def depthwise_conv2d(input,
            filter[di, dj, k, q] * input[b, strides[1] * i + rate[0] * di,
                                            strides[2] * j + rate[1] * dj, k]
 
-  Must have `strides[0] = strides[3] = 1`.  For the most common case of the
-  same horizontal and vertical strides, `strides = [1, stride, stride, 1]`.
+  Must have `strides[0] = strides[3] = 1` for "NHWC", or 
+  `strides[0] = strides[1] for "NCHW".  For the most common case of the same 
+  horizontal and vertical strides in "NHWC", `strides = [1, stride, stride, 1]`.
   If any value in `rate` is greater than 1, we perform atrous depthwise
   convolution, in which case all values in the `strides` tensor must be equal
   to 1.
@@ -358,7 +359,7 @@ def depthwise_conv2d(input,
     filter: 4-D with shape
       `[filter_height, filter_width, in_channels, channel_multiplier]`.
     strides: 1-D of size 4.  The stride of the sliding window for each
-      dimension of `input`.
+      dimension of `input`. Should follow order of `data_format`.
     padding: A string, either `'VALID'` or `'SAME'`. The padding algorithm.
       See the @{tf.nn.convolution$comment here}
     rate: 1-D of size 2. The dilation rate in which we sample input values
